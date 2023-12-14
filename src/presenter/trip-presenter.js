@@ -1,20 +1,21 @@
 
 import NewEditPoint from '../view/edit-point.js';
-import NewListFilter from '../view/list-filter.js';
 import NewListItem from '../view/list-item.js';
 import NewListSort from '../view/list-sort.js';
 import NewPoint from '../view/new-point.js';
-import NewFilters from '../view/filters.js';
 import NewTripEvents from '../view/trip-events.js';
 import {render} from '../render.js';
 
 export default class TripPresenter {
-  filters = new NewFilters();
+
   tripEvents = new NewTripEvents();
 
+  constructor({tripContainer}) {
+    this.tripContainer = tripContainer;
+  }
 
   init() {
-    render(new NewListFilter(), this.filters.getElement());
+    render(this.tripEvents, this.tripContainer);
     render(new NewListSort(), this.tripEvents.getElement());
     render(new NewEditPoint(), this.tripEvents.getElement());
 
