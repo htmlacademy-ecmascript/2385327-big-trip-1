@@ -1,24 +1,27 @@
 import {createElement} from '../render.js';
 
-function createNewListItemTemplate() {
+
+function createNewListItemTemplate(trip) {
+
+  const {basePrice, eventDate, eventTime, destination,} = trip;
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">MAR 18</time>
+      <time class="event__date" datetime="2019-03-18">${eventDate}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">Taxi Amsterdam</h3>
+      <h3 class="event__title">${destination}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+          <time class="event__start-time" datetime="2019-03-18T10:30">${eventTime}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+          <time class="event__end-time" datetime="2019-03-18T11:00">${eventTime}</time>
         </p>
         <p class="event__duration">30M</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">20</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
@@ -42,9 +45,14 @@ function createNewListItemTemplate() {
   );
 }
 
+
 export default class NewListItem {
+  constructor({trip}) {
+    this.trip = trip;
+  }
+
   getTemplate() {
-    return createNewListItemTemplate();
+    return createNewListItemTemplate(this.trip);
   }
 
   getElement() {

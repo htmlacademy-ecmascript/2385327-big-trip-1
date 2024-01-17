@@ -10,8 +10,9 @@ export default class TripPresenter {
 
   tripEvents = new NewTripEvents();
 
-  constructor({tripContainer}) {
+  constructor({tripContainer, tripModel}) {
     this.tripContainer = tripContainer;
+    this.tripModel = tripModel;
   }
 
   init() {
@@ -20,10 +21,11 @@ export default class TripPresenter {
     render(new NewEditPoint(), this.tripEvents.getElement());
 
 
-    for (let i = 0; i < 3; i++) {
-      render(new NewListItem(), this.tripEvents.getElement());
+    for (let i = 0; i < this.tripModel.getTrips().length; i++) {
+      render(new NewListItem({trip: this.tripModel.getTrips()[i]}),
+        this.tripEvents.getElement());
     }
 
-    render(new NewPoint(), this.tripEvents.getElement());
+    render(new NewPoint({trip: this.tripModel.getTrips()[0]}), this.tripEvents.getElement());
   }
 }
