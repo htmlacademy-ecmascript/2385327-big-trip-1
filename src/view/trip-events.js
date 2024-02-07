@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createNewTripEventsTemplate() {
   return (
@@ -12,20 +12,14 @@ function createNewTripEventsTemplate() {
   );
 }
 
-export default class NewTripEvents {
-  getTemplate() {
+export default class NewTripEvents extends AbstractView {
+  // #trip = null;
+  // constructor({trip}){
+  //   super();
+  //   this.#trip = trip;
+  // }
+
+  get template() {
     return createNewTripEventsTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

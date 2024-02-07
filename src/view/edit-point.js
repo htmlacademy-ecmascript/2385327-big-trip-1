@@ -1,4 +1,5 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
+
 
 function createNewEditPointTemplate() {
   return (
@@ -158,20 +159,22 @@ function createNewEditPointTemplate() {
   );
 }
 
-export default class NewEditPoint {
-  getTemplate() {
+export default class NewEditPoint extends AbstractView{
+  #handleFormSubmit = null;
+  constructor({onFormSubmit, onFormClose}){
+    super();
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', onFormClose);
+  }
+
+  get template() {
     return createNewEditPointTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
+
