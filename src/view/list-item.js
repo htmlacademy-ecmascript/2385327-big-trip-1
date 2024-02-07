@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 function createNewListItemTemplate(trip) {
@@ -46,24 +46,22 @@ function createNewListItemTemplate(trip) {
 }
 
 
-export default class NewListItem {
-  constructor({trip}) {
-    this.trip = trip;
+export default class NewListItem extends AbstractView{
+  #trip = null;
+  #handleClick = null;
+  constructor({trip, onEditClick}){
+    super();
+    this.#trip = trip;
+    this.#handleClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
   }
 
-  getTemplate() {
-    return createNewListItemTemplate(this.trip);
+  get template() {
+    return createNewListItemTemplate(this.#trip);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }
