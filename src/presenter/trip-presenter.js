@@ -8,6 +8,8 @@ import {render, replace,} from '../framework/render.js';
 
 export default class TripPresenter {
   #tripEvents = new NewTripEvents();
+  #listItem = null;
+  #editPoint = null;
   #tripContainer = null;
   #tripModel = null;
 
@@ -18,52 +20,50 @@ export default class TripPresenter {
 
   init() {
     render(this.#tripEvents, this.#tripContainer);
-    render(new NewListSort(), this.#tripEvents.element);
-    //render(new NewEditPoint(), this.#tripEvents.element);
 
 
     for (let i = 0; i < this.#tripModel.trips.length; i++) {
       this.#renderTrip(this.#tripModel.trips[i]);
     }
+  }
 
-    render(new NewPoint({trip: this.#tripModel.trips[0]}), this.#tripEvents.element);
+  #replaceItemToForm() {
+    replace(this.#editPoint, this.#listItem);
+  }
+
+  #replaceFormToItem(){
+    replace(this.#listItem, this.#editPoint);
+  }
+
+  #escKeyDownHandler(evt){
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.replaceFormToItem();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
   }
 
   #renderTrip(trip){
-    const escKeyDownHandler = (evt) =>{
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    const listItem = new NewListItem({
+
+    this.#listItem = new NewListItem({
       trip,
       onEditClick: () => {
-        replaceItemToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
+        this.#replaceItemToForm();
+        document.addEventListener('keydown', this.#escKeyDownHandler);
       }});
-    const tripEditComponent = new NewEditPoint({
-
+    this.#editPoint = new NewEditPoint({
       onFormSubmit: () => {
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
+        this.#replaceFormToItem();
+        document.removeEventListener('keydown', this.#escKeyDownHandler);
       },
 
       onFormClose: () => {
-        replaceFormToItem();
+        this.#replaceFormToItem();
       }
 
     });
 
-    function replaceItemToForm(){
-      replace(tripEditComponent, listItem);
-    }
 
-    function replaceFormToItem(){
-      replace(listItem, tripEditComponent);
-    }
-
-    render (listItem, this.#tripEvents.element);
+    render (this.#listItem, this.#tripEvents.element);
   }
 }
