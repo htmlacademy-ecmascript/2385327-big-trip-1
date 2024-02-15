@@ -1,69 +1,56 @@
-
-import NewEditPoint from '../view/edit-point.js';
-import NewListItem from '../view/list-item.js';
-import NewListSort from '../view/list-sort.js';
-import NewPoint from '../view/new-point.js';
+import PointPresenter from './point-presenter.js';
+import NewListEmpty from '../view/list-empty.js';
 import NewTripEvents from '../view/trip-events.js';
-import {render, replace,} from '../framework/render.js';
+import { render } from '../framework/render.js';
+
 
 export default class TripPresenter {
   #tripEvents = new NewTripEvents();
-  #tripContainer = null;
   #tripModel = null;
+  #pointPresenters = [];
+  #tripList = [];
+  #tripContainer = null;
+
 
   constructor({tripContainer, tripModel}) {
     this.#tripContainer = tripContainer;
     this.#tripModel = tripModel;
+    //this.#pointPresenter = new PointPresenter({pointData});
+  }
+
+  #renderList(){
+    for (let i = 0; i < this.#tripModel.trips.length; i++) {
+      const pointData = this.#tripModel.trips[i];
+      const pointPresenter = new PointPresenter({
+        pointData,
+        tripEvents: this.#tripEvents,
+      });
+      pointPresenter.init();
+      this.#pointPresenters.push(pointPresenter);
+    }
   }
 
   init() {
+    this.#tripList = [...this.#tripModel.trips];
+    this.#renderEmptyList();
     render(this.#tripEvents, this.#tripContainer);
-    render(new NewListSort(), this.#tripEvents.element);
-    //render(new NewEditPoint(), this.#tripEvents.element);
-
-
-    for (let i = 0; i < this.#tripModel.trips.length; i++) {
-      this.#renderTrip(this.#tripModel.trips[i]);
-    }
-
-    render(new NewPoint({trip: this.#tripModel.trips[0]}), this.#tripEvents.element);
+    this.#renderList();
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #renderTrip(trip){
-    const escKeyDownHandler = (evt) =>{
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      for (let i = 0; i < this.#pointPresenters.length; i++) {
+        this.#pointPresenters[i].replaceFormToItem();
       }
-    };
-    const listItem = new NewListItem({
-      trip,
-      onEditClick: () => {
-        replaceItemToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }});
-    const tripEditComponent = new NewEditPoint({
-
-      onFormSubmit: () => {
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-
-      onFormClose: () => {
-        replaceFormToItem();
-      }
-
-    });
-
-    function replaceItemToForm(){
-      replace(tripEditComponent, listItem);
     }
+  };
 
-    function replaceFormToItem(){
-      replace(listItem, tripEditComponent);
+  #renderEmptyList() {
+    if (this.#tripList.length === 0) {
+      render(new NewListEmpty(), this.#tripEvents.element);
     }
-
-    render (listItem, this.#tripEvents.element);
   }
+
 }
