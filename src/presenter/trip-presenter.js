@@ -1,4 +1,5 @@
 
+<<<<<<< Updated upstream
 import NewEditPoint from '../view/edit-point.js';
 import NewListItem from '../view/list-item.js';
 import NewListSort from '../view/list-sort.js';
@@ -10,14 +11,43 @@ export default class TripPresenter {
   #tripEvents = new NewTripEvents();
   #tripContainer = null;
   #tripModel = null;
+=======
+export default class TripPresenter {
+  #tripEvents = new NewTripEvents();
+  #tripModel = null;
+  #tripList = [];
+  #tripContainer = null;
+
+  #pointPresenters = [];
+
+>>>>>>> Stashed changes
 
   constructor({tripContainer, tripModel}) {
     this.#tripContainer = tripContainer;
     this.#tripModel = tripModel;
+<<<<<<< Updated upstream
+=======
+
+  }
+
+  #renderList(){
+    for (let i = 0; i < this.#tripModel.trips.length; i++) {
+      const pointData = this.#tripModel.trips[i];
+      const pointPresenter = new PointPresenter({
+        pointData,
+        tripEvents: this.#tripEvents,
+        clickOnFavorite: (id) => this.#clickOnFavorite(id),
+        closeForms: () => this.closeEditForms(),
+      });
+      pointPresenter.init();
+      this.#pointPresenters.push(pointPresenter);
+    }
+>>>>>>> Stashed changes
   }
 
   init() {
     render(this.#tripEvents, this.#tripContainer);
+<<<<<<< Updated upstream
     render(new NewListSort(), this.#tripEvents.element);
     //render(new NewEditPoint(), this.#tripEvents.element);
 
@@ -44,6 +74,11 @@ export default class TripPresenter {
         document.addEventListener('keydown', escKeyDownHandler);
       }});
     const tripEditComponent = new NewEditPoint({
+=======
+    this.#renderList();
+  }
+
+>>>>>>> Stashed changes
 
       onFormSubmit: () => {
         replaceFormToItem();
@@ -66,4 +101,22 @@ export default class TripPresenter {
 
     render (listItem, this.#tripEvents.element);
   }
+<<<<<<< Updated upstream
+=======
+
+  #clickOnFavorite(id){
+    this.#tripModel.toggleFavorite(id);
+    this.#pointPresenters.forEach((point) => {
+      point.removeTrip();
+    });
+    this.init();
+  }
+
+  closeEditForms(){
+    this.#pointPresenters.forEach((point) => {
+      point.resetView();
+    });
+  }
+
+>>>>>>> Stashed changes
 }

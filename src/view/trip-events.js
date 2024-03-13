@@ -13,11 +13,9 @@ function createNewTripEventsTemplate() {
 }
 
 export default class NewTripEvents extends AbstractView {
-  // #trip = null;
-  // constructor({trip}){
-  //   super();
-  //   this.#trip = trip;
-  // }
+  constructor(){
+    super();
+  }
 
   get template() {
     return createNewTripEventsTemplate();
