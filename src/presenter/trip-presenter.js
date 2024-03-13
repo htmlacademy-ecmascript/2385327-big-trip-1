@@ -1,21 +1,24 @@
+
+import NewEditPoint from '../view/edit-point.js';
+import NewListItem from '../view/list-item.js';
+import NewListSort from '../view/list-sort.js';
+import NewPoint from '../view/new-point.js';
 import PointPresenter from './point-presenter.js';
 import NewListEmpty from '../view/list-empty.js';
 import NewTripEvents from '../view/trip-events.js';
 import { render } from '../framework/render.js';
 
-
 export default class TripPresenter {
   #tripEvents = new NewTripEvents();
   #tripModel = null;
-  #pointPresenters = [];
   #tripList = [];
   #tripContainer = null;
 
+  #pointPresenters = [];
 
   constructor({tripContainer, tripModel}) {
     this.#tripContainer = tripContainer;
     this.#tripModel = tripModel;
-    //this.#pointPresenter = new PointPresenter({pointData});
   }
 
   #renderList(){
@@ -24,6 +27,8 @@ export default class TripPresenter {
       const pointPresenter = new PointPresenter({
         pointData,
         tripEvents: this.#tripEvents,
+        clickOnFavorite: (id) => this.#clickOnFavorite(id),
+        closeForms: () => this.closeEditForms(),
       });
       pointPresenter.init();
       this.#pointPresenters.push(pointPresenter);
@@ -53,4 +58,17 @@ export default class TripPresenter {
     }
   }
 
+  #clickOnFavorite(id){
+    this.#tripModel.toggleFavorite(id);
+    this.#pointPresenters.forEach((point) => {
+      point.removeTrip();
+    });
+    this.init();
+  }
+
+  closeEditForms(){
+    this.#pointPresenters.forEach((point) => {
+      point.resetView();
+    });
+  }
 }

@@ -11,7 +11,7 @@ const mockTasks = [
     eventDate: getRandomArrayElement(DATE),
     eventTime: getRandomArrayElement(TIME),
     destination: getRandomArrayElement(CITIES),
-    isFavorite: false,
+    isFavourite: false,
     offers: [
       null
     ],
@@ -22,7 +22,7 @@ const mockTasks = [
     eventDate: getRandomArrayElement(DATE),
     eventTime: getRandomArrayElement(TIME),
     destination: getRandomArrayElement(CITIES),
-    isFavorite: true,
+    isFavourite: true,
     offers: [
       null
     ],
@@ -33,7 +33,7 @@ const mockTasks = [
     eventDate: getRandomArrayElement(DATE),
     eventTime: getRandomArrayElement(TIME),
     destination: getRandomArrayElement(CITIES),
-    isFavorite: false,
+    isFavourite: false,
     offers: [
       null
     ],
@@ -44,7 +44,7 @@ const mockTasks = [
     eventDate: getRandomArrayElement(DATE),
     eventTime: getRandomArrayElement(TIME),
     destination: getRandomArrayElement(CITIES),
-    isFavorite: true,
+    isFavourite: true,
     offers: [
       null
     ],
@@ -55,7 +55,10 @@ const mockTasks = [
 
 
 function getRandomTrip() {
-  return getRandomArrayElement(mockTasks);
+  return {
+    ...getRandomArrayElement(mockTasks),
+    id: crypto.randomUUID()
+  };
 }
 
 export {getRandomTrip};

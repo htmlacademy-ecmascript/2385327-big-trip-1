@@ -8,4 +8,19 @@ export default class TripModel {
   get trips() {
     return this.#trips;
   }
+
+  toggleFavorite(id){
+    console.log(id)
+    console.log([...this.#trips])
+    this.#trips = this.#trips.map((trip) => {
+      if(id === trip.id){
+        return {
+          ...trip,
+          isFavorite: !trip.isFavorite,
+        };
+      }
+      return trip;
+    });
+    console.log([...this.#trips])
+  }
 }
