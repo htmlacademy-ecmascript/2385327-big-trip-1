@@ -1,5 +1,6 @@
 import NewEditPoint from '../view/edit-point.js';
 import NewListItem from '../view/list-item.js';
+
 import {render, replace, remove} from '../framework/render.js';
 
 const Mode = {
@@ -68,6 +69,7 @@ export default class PointPresenter {
         this.#clickOnFavorite(trip.id);
       }
     });
+
     this.#editPoint = new NewEditPoint({
       onFormSubmit: () => {
         this.replaceFormToItem();
